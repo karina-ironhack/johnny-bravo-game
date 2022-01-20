@@ -1,0 +1,25 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+#board {
+    background-color: rgb(254, 179, 255);
+    height: 90vh;
+    width: 60vw;
+    margin: 20px auto;
+    position: relative;
+}
+
+.player {
+    position: absolute;
+    background: url(./player.png);
+    background-size:contain;
+    background-repeat: no-repeat;
+}
+
+.obstacle {
+    position: absolute;
+    background: url(./obstacle2.webp);
+    background-size:contain;
+    background-repeat: no-repeat;
+}
