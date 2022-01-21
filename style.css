@@ -23,3 +23,10 @@ body {
     background-size:contain;
     background-repeat: no-repeat;
 }
+
+.prize {
+    position: absolute;
+    background: url(./bonus.png);
+    background-size:contain;
+    background-repeat: no-repeat;
+}

@@ -1,35 +1,37 @@
+const gameBoard = document.getElementById("board");
+
 class Game {
+  constructor() {
+    this.obstaclesArray = []
+    this.timer = 0;
+  }
+
   start() {
+    // create player
     this.player = new Player();
     this.player.domElement = this.createElm(this.player);
     this.drawElm(this.player);
-
     this.addEventListeners();
-
-    this.obstaclesArray = []
-    this.timer = 0;
 
     setInterval(() => {
         this.timer++;
 
         if (this.timer % 3 === 0 ) {
-            // creating obstacle
-            const newObstacle = new Obstacle();
-            this.obstaclesArray.push(newObstacle)
-            newObstacle.domElement = this.createElm(newObstacle);
-            this.drawElm(newObstacle)
+          // create obstacle
+          const newObstacle = new Obstacle();
+          this.obstaclesArray.push(newObstacle)
+          newObstacle.domElement = this.createElm(newObstacle);
+          this.drawElm(newObstacle)
         }
 
         // move obstacles in obstacle array
         this.obstaclesArray.forEach((elm) => {
-            elm.moveDown();
-            this.drawElm(elm);
-            // elm.remove(elm);
-
-            if (elm.positionY <= 10) {
-                this.obstaclesArray.shift(elm)
-            }
+          elm.moveDown();
+          this.drawElm(elm);
+          this.detectCollision(elm);
+          elm.removeObstacle(this.obstaclesArray, elm);
         })
+        console.log(this.obstaclesArray)
       }, 1000)
   }
 
@@ -60,6 +62,16 @@ class Game {
     instance.domElement.style.left = instance.positionX + 'vw';
     instance.domElement.style.bottom = instance.positionY + 'vh';
   }
+
+  detectCollision(elm) {
+    if (this.player.positionX < elm.positionX + elm.width && 
+      this.player.positionX + this.player.width > elm.positionX &&
+      this.player.positionY < elm.positionY + elm.height && 
+      this.player.positionY + this.player.height > elm.positionY
+    ) {
+      alert('game over')
+    }
+  }
 }
 
 class Player {
@@ -68,7 +80,7 @@ class Player {
     this.positionX = 0;
     this.positionY = 0;
     this.height = 10;
-    this.width = 10;
+    this.width = 4;
     this.domElement = null;
   }
   moveLeft() {
@@ -83,39 +95,23 @@ class Player {
   }
 }
 
-// class Obstacle extends Player {
-//     constructor(height, width, domElement) {
-//         super(height, width, domElement)
-//         this.className = 'obstacle';
-//         this.positionX = 30;
-//         this.positionY = 80;
-//     }
-//     moveDown() {
-//         setInterval(() => {
-//             this.positionY -= 10;
-//             console.log(this.positionY)
-//         }, 1000)
-//     }
-// }
-
-class Obstacle  {
-    constructor() {
-        this.className = 'obstacle';
-        this.positionX = 30;
-        this.positionY = 90;
-        this.height = 10;
-        this.width = 10;
-        this.domElement = null;
+class Obstacle extends Player {
+  constructor(height, width, domElement) {
+    super(height, width, domElement)
+    this.className = 'obstacle';
+    this.positionX = Math.floor(Math.random() * 55);
+    this.positionY = 90;
+    this.width = 3;
+  }
+  moveDown() {
+    this.positionY -= 10;
+  }
+  removeObstacle(arr, elm) {
+    if(elm.positionY < 0) {
+      elm.domElement.remove();
+      arr.shift(elm);
     }
-    moveDown() {
-        if (this.positionY >= 10) {
-            this.positionY -= 10;
-        }
-    }
-    
-    // remove() {
-    //     game.removeChild(this.domElement)
-    // }
+  }
 }
 
 const game = new Game();
