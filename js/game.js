@@ -113,6 +113,5 @@ class Obstacle extends Player {
     }
   }
 }
-
 const game = new Game();
 game.start();
